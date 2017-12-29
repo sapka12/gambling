@@ -49,6 +49,7 @@ class Gamer(name: String, cash: BigInt, bank: ActorRef) extends Actor {
 
     state = state.copy(timestamp = ZonedDateTime.now().toLocalDateTime.toString)
     Uploader.send(List(state), "gambling", "state")
+    KafkaProducer.send(state)
     println(state)
   }
 
