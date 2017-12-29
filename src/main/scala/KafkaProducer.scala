@@ -1,16 +1,11 @@
-import spray.json.RootJsonFormat
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import spray.json._
-import DefaultJsonProtocol._
 import akka.actor.ActorSystem
-import akka.kafka.{ProducerMessage, ProducerSettings}
+import akka.kafka.ProducerSettings
 import akka.kafka.scaladsl.Producer
-import akka.serialization.ByteArraySerializer
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.JavaFlowSupport.Sink
 import akka.stream.scaladsl.Source
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
+import spray.json.{RootJsonFormat, _}
 
 object KafkaProducer {
 
