@@ -1,5 +1,7 @@
-import java.time.ZonedDateTime
+import java.time.{ZoneId, ZonedDateTime}
+
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+
 import scala.util.Random
 
 sealed trait GamblingActions
@@ -43,17 +45,19 @@ class Gamer(name: String, cash: BigInt, bank: ActorRef) extends Actor {
                             timestamp: String
                           )
 
+  def now() = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).toString
+
   def logState() = {
     import spray.json.DefaultJsonProtocol._
     implicit val format = jsonFormat5(GamblingState)
 
-    state = state.copy(timestamp = ZonedDateTime.now().toLocalDateTime.toString)
+    state = state.copy(timestamp = now())
     Uploader.send(List(state), "gambling", "state")
     KafkaProducer.send(state)
     println(state)
   }
 
-  var state = GamblingState(name, cash, 0, 0, ZonedDateTime.now().toLocalDateTime.toString)
+  var state = GamblingState(name, cash, 0, 0, now())
 
   override def receive: Receive = {
 
